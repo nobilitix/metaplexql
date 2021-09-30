@@ -3,6 +3,7 @@ import Router from "koa-router";
 import graphqlHTTP from "koa-graphql";
 import { logger, loggerMiddleware } from "./logger";
 import { getSchema } from "./schema";
+import { rootValue } from "./resolvers";
 
 const PORT = process.env.PORT ?? 3000;
 const app = new Koa();
@@ -13,6 +14,7 @@ router.all(
   "/graphql",
   graphqlHTTP({
     schema: await getSchema(),
+    rootValue,
     graphiql: true,
   })
 );
