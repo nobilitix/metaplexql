@@ -7,18 +7,19 @@
 Current state of the repo in all its' early glory!
 
 ## Core functionality list
-- [x] - graphql server with a graphiql GUI
-- [x] - fetch most of the Store & derived data using `@metaplex/js`
-- [ ] - fetch whitelisted creators & their tokens
+- [x] graphql server with a graphiql GUI
+- [x] fetch most of the Store & derived data using `@metaplex/js`
+- [ ] fetch whitelisted creators & their tokens
 
 Next steps:
-- [ ] - add a queue system for requests to prevent rate limiting on public endpoints
-- [ ] - add the ability to cache data - ideally to make this extensible it should be an interchangeable adapter so that teams could build their own backends
-- [ ] - introduce a redis caching layer
-- [ ] - introduce an IPFS caching layer
-- [ ] - configurable logging
-- [ ] - ...?
-- [ ] - profit
+- [ ] add a queue system for requests to prevent rate limiting on public endpoints
+- [ ] add the ability to cache data - ideally to make this extensible it should be an interchangeable adapter so that teams could build their own backends
+- [ ] add the ability to deploy to a serverless enviornment (Workers/Lambda/Fly e.t.c)
+- [ ] introduce a redis caching layer
+- [ ] introduce an IPFS caching layer
+- [ ] configurable logging
+- [ ] ...?
+- [ ] profit
 
 ## Developing
 1. `git clone git@github.com:nobilitix/metaplexql.git`
