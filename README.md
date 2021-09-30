@@ -3,8 +3,8 @@
 `metaplexql` is a graphql server for Metaplex apps on Solana.
 
 *Note: This repository is in early development stages and isn't yet functional*
-![Screen Shot 2021-09-09 at 1 32 03](https://user-images.githubusercontent.com/1970424/132594439-cb248648-5c5e-40eb-bcce-de76733ca867.png)
-Current state of the repo in all its' hello-world glory!
+<img width="1440" alt="Screen Shot 2021-09-29 at 14 22 00" src="https://user-images.githubusercontent.com/1970424/135465319-60cce179-e1b1-480a-8e09-42c88cd2c9bc.png">
+Current state of the repo in all its' early glory!
 
 ## Core functionality list
 - [x] - graphql server with a graphiql GUI
