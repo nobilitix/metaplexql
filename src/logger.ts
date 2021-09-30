@@ -16,11 +16,11 @@ const logger = createLogger({
   ),
   transports: [
     //
-    // - Write to all logs with level `info` and below to `anchorql-combined.log`.
-    // - Write all logs error (and below) to `anchorql-error.log`.
+    // - Write to all logs with level `info` and below to `metaplexql-combined.log`.
+    // - Write all logs error (and below) to `metaplexql-error.log`.
     //
-    new transports.File({ filename: "anchorql-error.log", level: "error" }),
-    new transports.File({ filename: "anchorql-combined.log" }),
+    new transports.File({ filename: "metaplexql-error.log", level: "error" }),
+    new transports.File({ filename: "metaplexql-combined.log" }),
   ],
 });
 

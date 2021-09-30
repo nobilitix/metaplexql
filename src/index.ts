@@ -20,4 +20,4 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 app.listen(PORT);
-logger.info(`👂  anchorql listening on port ${PORT}`);
+logger.info(`👂  metaplexql listening on port ${PORT}`);

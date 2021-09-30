@@ -1,15 +1,15 @@
 {
-  "name": "anchorql",
+  "name": "metaplexql",
   "type": "module",
   "version": "1.0.0",
-  "description": "GraphQL layer for Anchor programs",
-  "homepage": "https://github.com/nobilitix/anchorql",
-  "repository": "nobilitix/anchorql",
+  "description": "GraphQL layer for Metaplex programs",
+  "homepage": "https://github.com/nobilitix/metaplexql",
+  "repository": "nobilitix/metaplexql",
   "main": "dist/index.js",
   "source": "src/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "anchorql": "bin/anchorql.js"
+    "metaplexql": "bin/metaplexql.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
@@ -21,6 +21,9 @@
   },
   "license": "MPL-2.0",
   "dependencies": {
+    "@graphql-tools/schema": "^8.2.0",
+    "@metaplex/js": "0.0.1",
+    "bn.js": "^5.2.0",
     "commander": "^8.1.0",
     "dotenv": "^10.0.0",
     "graphql": "^15.5.3",
@@ -32,6 +35,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.1.0",
     "@types/koa": "^2.13.4",
     "@types/koa-graphql": "^0.8.5",
     "@types/koa-morgan": "^1.0.5",
