@@ -139,10 +139,17 @@ const schema = makeExecutableSchema({
       tokenMetadataProgram: PublicKey
       tokenProgram: PublicKey
     }
+    
+    type WhitelistedCreator {
+      key: Int
+      address: PublicKey
+      activated: Boolean
+    }
   
     type Store {
       data: StoreData
       auctionManagers: [AuctionManager]
+      whitelistedCreators: [WhitelistedCreator]
     }
   
     type Query {

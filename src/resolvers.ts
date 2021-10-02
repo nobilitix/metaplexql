@@ -7,6 +7,7 @@ import {
   Store,
   StringPublicKey,
   Vault,
+  WhitelistedCreator,
 } from "@metaplex/js";
 import BN from "bn.js";
 
@@ -116,6 +117,25 @@ const auctionManagers = (storeAccount: Store) => async () => {
   }));
 };
 
+const whitelistedCreators = (storeAccount: Store) => async () => {
+  const creators = await storeAccount.getWhitelistedCreators(connection);
+  const pdas = await Promise.all(
+    creators.map((creator) =>
+      WhitelistedCreator.getPDA(storeAccount.pubkey, creator.data.address)
+    )
+  );
+
+  const storeCreators = creators.filter(
+    (creator, key) => pdas[key].toBase58() === creator.pubkey.toBase58()
+  );
+
+  return storeCreators.map((storeCreator) => ({
+    key: storeCreator.data.key,
+    address: storeCreator.data.address,
+    activated: storeCreator.data.activated,
+  }));
+};
+
 const store = async ({ storeId }: { storeId: StringPublicKey }) => {
   const storeAccount = await Store.load(connection, storeId);
   return {
@@ -128,6 +148,7 @@ const store = async ({ storeId }: { storeId: StringPublicKey }) => {
       tokenProgram: storeAccount.data.tokenProgram,
     },
     auctionManagers: auctionManagers(storeAccount),
+    whitelistedCreators: whitelistedCreators(storeAccount),
   };
 };
 
