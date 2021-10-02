@@ -32,4 +32,146 @@ Next steps:
 - metaplexql-combined.log
 - metaplexql-error.log
 
+## Example Query
+```
+{
+  store(storeId: "AUy7dGGBbHThDb1a6VdXHjiExGKUFbDvXQoQXg3VtbJG") {
+    data {
+      key
+      public
+      auctionProgram
+      tokenVaultProgram
+      tokenMetadataProgram
+      tokenProgram
+    }
+    whitelistedCreators {
+      data {
+        key
+        address
+        activated
+      }
+      metadata {
+        data {
+          key
+          updateAuthority
+          mint
+          primarySaleHappened
+          isMutable
+          data {
+            name
+            symbol
+            uri
+            sellerFeeBasisPoints
+            creators {
+              address
+              verified
+              share
+            }
+          }
+        }
+        edition {
+          data {
+            ... on MasterEditionV1Data {
+              __typename
+              key
+              supply
+              maxSupply
+              printingMint
+              oneTimePrintingAuthorizationMint
+            }
+
+            ... on MasterEditionV2Data {
+              __typename
+              key
+              supply
+              maxSupply
+            }
+
+            ... on LimitedEditionData {
+              __typename
+              key
+              parent
+              edition
+            }  
+          }
+        }
+      }
+    }
+    auctionManagers {
+      data {
+        key
+        store
+        authority
+        auction
+        vault
+        acceptPayment
+        state {
+          status
+          safetyConfigItemsValidated
+          bidsPushedToAcceptPayment
+          hasParticipation
+        }
+      }
+      auction {
+        data {
+          authority
+          tokenMint
+          lastBid
+          endedAt
+          endAuctionAt
+          auctionGap
+          priceFloor {
+            type
+            hash
+            minPrice
+          }
+          bidState {
+            type
+            max
+            bids {
+              key
+              amount
+            }
+          }
+          state
+          bidRedemptionKey
+        }
+        bidderMetadata {
+          data {
+            bidderPubkey
+            auctionPubkey
+            lastBid
+            lastBidTimestamp
+            cancelled
+          }
+        }
+        bidderPots {
+          data {
+            bidderPot
+            bidderAct
+            auctionAct
+            emptied
+          }
+        }
+      }
+      vault {
+        data {
+          key
+          tokenProgram
+          fractionMint
+          authority
+          fractionTreasury
+          redeemTreasury
+          allowFurtherShareCreation
+          pricingLookupAddress
+          tokenTypeCount
+          state
+          lockedPricePerShare
+        }
+      }
+    }
+  }
+}
+```
+
 Additionally, if the environment is not production, it outputs all logs to console.
