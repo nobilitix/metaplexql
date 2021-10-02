@@ -140,10 +140,69 @@ const schema = makeExecutableSchema({
       tokenProgram: PublicKey
     }
     
-    type WhitelistedCreator {
+    type Creator {
+      address: PublicKey
+      verified: Boolean
+      share: Boolean
+    }
+    
+    type MetadataDataData {
+      name: String
+      symbol: String
+      uri: String
+      sellerFeeBasisPoints: Int
+      creators: [Creator]
+    }
+    
+    type MetadataData {
+      key: Int
+      updateAuthority: PublicKey
+      mint: PublicKey
+      primarySaleHappened: Boolean
+      isMutable: Boolean
+      data: MetadataDataData
+    }
+    
+    type MasterEditionV1Data {
+      key: Int
+      supply: BigNumber
+      maxSupply: BigNumber
+      printingMint: PublicKey
+      oneTimePrintingAuthorizationMint: PublicKey
+    }
+    
+    type MasterEditionV2Data {
+      key: Int 
+      supply: BigNumber
+      maxSupply: BigNumber
+    }
+    
+    type LimitedEditionData {
+      key: Int
+      parent: PublicKey
+      edition: BigNumber
+    }
+    
+    union EditionData = MasterEditionV1Data | MasterEditionV2Data | LimitedEditionData
+    
+    type Edition {
+      data: EditionData
+    }
+    
+    type Metadata {
+      data: MetadataData
+      edition: Edition
+    }
+    
+    type WhitelistedCreatorData {
       key: Int
       address: PublicKey
       activated: Boolean
+    }
+    
+    type WhitelistedCreator {
+      data: WhitelistedCreatorData
+      metadata: [Metadata]
     }
   
     type Store {

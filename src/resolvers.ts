@@ -4,10 +4,17 @@ import {
   BidderMetadata,
   BidderPot,
   Connection,
+  Edition,
+  MasterEdition,
+  Metadata,
+  MetadataKey,
   Store,
   StringPublicKey,
   Vault,
   WhitelistedCreator,
+  MasterEditionV1Data,
+  MasterEditionV2Data,
+  EditionData,
 } from "@metaplex/js";
 import BN from "bn.js";
 
@@ -117,6 +124,80 @@ const auctionManagers = (storeAccount: Store) => async () => {
   }));
 };
 
+// TODO: Not too happy with how those type guards are necessary. This should probably be improved in @metaplex/js itself
+const isMasterEditionV1 = (
+  edition: MasterEdition | Edition
+): edition is MasterEdition => edition.data.key === MetadataKey.MasterEditionV1;
+
+const isMasterEditionV2 = (
+  edition: MasterEdition | Edition
+): edition is MasterEdition => edition.data.key === MetadataKey.MasterEditionV2;
+
+const isLimitedEdition = (
+  edition: MasterEdition | Edition
+): edition is Edition => edition.data.key === MetadataKey.EditionV1;
+
+const edition = (storeAccount: Store, metadata: Metadata) => async () => {
+  const item = await metadata.getEdition(connection);
+
+  if (isMasterEditionV1(item)) {
+    // TODO: This is ugly, and should be improved in @metaplex/js with more complex types
+    const data = item.data as MasterEditionV1Data;
+    return {
+      data: {
+        key: data.key,
+        supply: data.supply,
+        maxSupply: data.maxSupply,
+        printingMint: data.printingMint,
+        oneTimePrintingAuthorizationMint: data.oneTimePrintingAuthorizationMint,
+      },
+    };
+  }
+  if (isMasterEditionV2(item)) {
+    const data = item.data as MasterEditionV2Data;
+    return {
+      data: {
+        key: data.key,
+        supply: data.supply,
+        maxSupply: data.maxSupply,
+      },
+    };
+  }
+  if (isLimitedEdition(item)) {
+    return {
+      data: {
+        key: item.data.key,
+        parent: item.data.parent,
+        edition: item.data.edition,
+      },
+    };
+  }
+
+  throw new Error("Invalid edition key");
+};
+
+const metadata =
+  (storeAccount: Store, creator: WhitelistedCreator) => async () => {
+    const items = await Metadata.findMany(connection, {
+      updateAuthority: creator.data.address,
+    });
+
+    return items.map((item) => ({
+      data: {
+        key: item.data.key,
+        updateAuthority: item.data.updateAuthority,
+        mint: item.data.mint,
+        primarySaleHappened: item.data.primarySaleHappened,
+        isMutable: item.data.isMutable,
+        data: item.data.data,
+      },
+      edition: edition(storeAccount, item),
+    }));
+  };
+
+// TODO: Filter whitelisted creators by store
+// Currently we're just getting ALL the whitelisted creators and filtering for the store whitelisted creators by PDA
+// This is of course highly unscaleable, but unavoidable right now due to a lack of any sort of foreign key
 const whitelistedCreators = (storeAccount: Store) => async () => {
   const creators = await storeAccount.getWhitelistedCreators(connection);
   const pdas = await Promise.all(
@@ -130,9 +211,12 @@ const whitelistedCreators = (storeAccount: Store) => async () => {
   );
 
   return storeCreators.map((storeCreator) => ({
-    key: storeCreator.data.key,
-    address: storeCreator.data.address,
-    activated: storeCreator.data.activated,
+    data: {
+      key: storeCreator.data.key,
+      address: storeCreator.data.address,
+      activated: storeCreator.data.activated,
+    },
+    metadata: metadata(storeAccount, storeCreator),
   }));
 };
 
@@ -184,6 +268,23 @@ export const scalarResolvers = {
       return null;
     },
   }),
+  EditionData: {
+    // eslint-disable-next-line no-underscore-dangle
+    __resolveType(
+      obj: MasterEditionV1Data | MasterEditionV2Data | EditionData
+    ) {
+      switch (obj.key) {
+        case MetadataKey.MasterEditionV1:
+          return "MasterEditionV1Data";
+        case MetadataKey.MasterEditionV2:
+          return "MasterEditionV2Data";
+        case MetadataKey.EditionV1:
+          return "LimitedEditionData";
+        default:
+          throw new Error("Invalid edition key");
+      }
+    },
+  },
   AuctionState: {
     Created: 0,
     Started: 1,
