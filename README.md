@@ -9,7 +9,7 @@ Current state of the repo in all its' early glory!
 ## Core functionality list
 - [x] graphql server with a graphiql GUI
 - [x] fetch most of the Store & derived data using `@metaplex/js`
-- [ ] fetch whitelisted creators & their tokens
+- [x] fetch whitelisted creators & their tokens
 
 Next steps:
 - [ ] add a queue system for requests to prevent rate limiting on public endpoints
